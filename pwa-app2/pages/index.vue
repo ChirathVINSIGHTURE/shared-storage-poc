@@ -19,7 +19,7 @@ onMounted(async () => {
 </template> -->
 
 
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import { ref } from 'vue';
 
 const sharedData = ref('');
@@ -27,6 +27,32 @@ const sharedData = ref('');
 const getData = async () => {
   if ('sharedStorage' in window) {
     sharedData.value = await sharedStorage.get('sharedKey');
+  } else {
+    console.log('Shared Storage API not supported');
+  }
+};
+
+getData();
+</script>
+
+<template>
+  <div>
+    <h1>PWA - App 2</h1>
+    <p>Shared Data: {{ sharedData }}</p>
+  </div>
+</template> -->
+
+
+<script setup lang="ts">
+import { ref } from 'vue';
+
+const sharedData = ref('');
+
+const getData = async () => {
+  if ('sharedStorage' in window) {
+    const worklet = new SharedStorageWorklet('shared-worklet');
+    sharedData.value = await worklet.handleOperation('get', { key: 'sharedKey' });
+    console.log('Data fetched:', sharedData.value);
   } else {
     console.log('Shared Storage API not supported');
   }
