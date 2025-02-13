@@ -45,20 +45,30 @@ const addData = async () => {
 </template> -->
 
 <script setup lang="ts">
-const setData = async () => {
-  if ('sharedStorage' in window) {
-    const worklet = new SharedStorageWorklet('shared-worklet');
-    await worklet.handleOperation('set', { key: 'sharedKey', value: 'Hello from App 1' });
-    console.log('Data set successfully');
+const getExperimentGroup = () => Math.round(Math.random());
+
+const injectContent = async () => {
+  if ("sharedStorage" in window) {
+    // Register the worklet
+    await window.sharedStorage.worklet.addModule("/ab-testing-worklet.js");
+
+    // Assign the user to a random group and store it in shared storage
+    await window.sharedStorage.set("ab-testing-group", getExperimentGroup(), {
+      ignoreIfPresent: true,
+    });
+
+    console.log("User assigned to A/B testing group and data stored.");
   } else {
-    console.log('Shared Storage API not supported');
+    console.log("Shared Storage API not supported.");
   }
 };
+
+injectContent();
 </script>
 
 <template>
   <div>
     <h1>PWA - App 1</h1>
-    <button @click="setData">Set Shared Data</button>
+    <p>User is being assigned to an A/B testing group...</p>
   </div>
 </template>

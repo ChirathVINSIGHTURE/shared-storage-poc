@@ -42,28 +42,27 @@ getData();
   </div>
 </template> -->
 
-
 <script setup lang="ts">
-import { ref } from 'vue';
+let group = 0;
 
-const sharedData = ref('');
+const getGroup = async () => {
+  if ("sharedStorage" in window) {
+    await window.sharedStorage.worklet.addModule("/ab-testing-worklet.js");
 
-const getData = async () => {
-  if ('sharedStorage' in window) {
-    const worklet = new SharedStorageWorklet('shared-worklet');
-    sharedData.value = await worklet.handleOperation('get', { key: 'sharedKey' });
-    console.log('Data fetched:', sharedData.value);
+    group = await window.sharedStorage.get("ab-testing-group");
+    console.log("User belongs to group:", group);
   } else {
-    console.log('Shared Storage API not supported');
+    console.log("Shared Storage API not supported.");
   }
 };
 
-getData();
+getGroup();
 </script>
 
 <template>
   <div>
     <h1>PWA - App 2</h1>
-    <p>Shared Data: {{ sharedData }}</p>
+    <p v-if="group === 0">Default Content (Group 0)</p>
+    <p v-else>Experimental Content (Group 1)</p>
   </div>
 </template>
