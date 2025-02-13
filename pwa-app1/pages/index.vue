@@ -57,6 +57,8 @@ const injectContent = async () => {
       ignoreIfPresent: true,
     });
 
+    
+
     console.log("User assigned to A/B testing group and data stored.");
   } else {
     console.log("Shared Storage API not supported.");

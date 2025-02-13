@@ -1,6 +1,6 @@
 // ab-testing-worklet.js
 class ABTestingWorklet {
-  async handleOperation(operation, data) {
+  async run(operation, data) {
     if (operation === "selectURL") {
       const group = await sharedStorage.get("ab-testing-group");
       return group === 0 ? 0 : 1;
@@ -8,4 +8,4 @@ class ABTestingWorklet {
   }
 }
 
-registerSharedStorageWorklet("ab-testing", ABTestingWorklet);
+register("ab-testing", ABTestingWorklet);

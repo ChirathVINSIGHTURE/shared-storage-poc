@@ -46,14 +46,11 @@ getData();
 let group = 0;
 
 const getGroup = async () => {
-  if ("sharedStorage" in window) {
+ 
     await window.sharedStorage.worklet.addModule("/ab-testing-worklet.js");
 
     group = await window.sharedStorage.get("ab-testing-group");
     console.log("User belongs to group:", group);
-  } else {
-    console.log("Shared Storage API not supported.");
-  }
 };
 
 getGroup();
