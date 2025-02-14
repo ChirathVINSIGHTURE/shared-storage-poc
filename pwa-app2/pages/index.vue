@@ -43,11 +43,23 @@ getData();
 </template> -->
 
 <script setup lang="ts">
+let group = 0;
+
+const getGroup = async () => {
+ 
+    await window.sharedStorage.worklet.addModule("/ab-testing-worklet.js");
+
+    group = await window.sharedStorage.get("ab-testing-group");
+    console.log("User belongs to group:", group);
+};
+
+getGroup();
 </script>
 
 <template>
   <div>
     <h1>PWA - App 2</h1>
-   
+    <p v-if="group === 0">Default Content (Group 0)</p>
+    <p v-else>Experimental Content (Group 1)</p>
   </div>
 </template>
